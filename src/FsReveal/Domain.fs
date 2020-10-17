@@ -1,22 +1,17 @@
 ﻿namespace FsReveal
 
-open System
-open System.IO
-open System.Collections.Generic
-open System.Text
-open FSharp.Literate
-open FSharp.Markdown
-open FSharp.Markdown.Html
+open FSharp.Formatting.Literate
+open FSharp.Formatting.Markdown
 
-type SlideData = 
+type SlideData =
     { Properties : Map<string,string>
       Paragraphs : MarkdownParagraph list }
 
-type Slide = 
+type Slide =
     | Simple of SlideData
     | Nested of SlideData list
 
-type Presentation = 
+type Presentation =
     { Properties : Map<string,string>
       Slides : Slide list
       Document : LiterateDocument }

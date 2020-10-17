@@ -1,6 +1,6 @@
-FSharp.Formatting
-FSharp.Core
-
 group Test
+FSharp.Core
+Microsoft.NET.Test.Sdk
+NUnit3TestAdapter
 NUnit
 File:FsUnit.fs .

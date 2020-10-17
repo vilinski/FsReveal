@@ -1,8 +1,10 @@
-#I @"../../bin/"
-#r "FsReveal.dll"
-#r "FSharp.Literate.dll"
-#r "../../packages/build/FAKE/tools/FakeLib.dll"
-open Fake
+#r "nuget: FsReveal"
+#r "nuget: FSharp.Formatting.Literate.dll"
+#r "nuget: Fake.IO.FileSystem"
+#r "nuget: Fake.Core.Trace"
+
+open Fake.Core
+open Fake.IO.FileSystemOperators
 open System.IO
 
 open FsReveal
@@ -20,39 +22,39 @@ if not (System.IO.File.Exists(targetFCIS)) then
 
 let copyStylesheet() =
     try
-        CopyFile (outDir @@ "css\custom.css") (slidesDir @@ "custom.css")
+        Shell.copyFile (outDir @@ "css\custom.css") (slidesDir @@ "custom.css")
     with
-    | exn -> traceImportant <| sprintf "Could not copy stylesheet: %s" exn.Message
+    | exn -> Trace.traceImportant <| sprintf "Could not copy stylesheet: %s" exn.Message
 
 let copyPics() =
     try
       !! (slidesDir @@ "images/*.*")
       |> CopyFiles (outDir @@ "images")
     with
-    | exn -> traceImportant <| sprintf "Could not copy picture: %s" exn.Message    
+    | exn -> Trace.traceImportant <| sprintf "Could not copy picture: %s" exn.Message
 
-let generateFor (file:FileInfo) = 
+let generateFor (file:FileInfo) =
     try
         copyPics()
         let rec tryGenerate trials =
             try
                 FsReveal.GenerateFromFile(file.FullName, outDir)
-            with 
+            with
             | exn when trials > 0 -> tryGenerate (trials - 1)
-            | exn -> 
-                traceImportant <| sprintf "Could not generate slides for: %s" file.FullName
-                traceImportant exn.Message
+            | exn ->
+                Trace.traceImportant <| sprintf "Could not generate slides for: %s" file.FullName
+                Trace.traceImportant exn.Message
 
         tryGenerate 3
 
         copyStylesheet()
     with
     | :? FileNotFoundException as exn ->
-        traceImportant <| sprintf "Could not copy file: %s" exn.FileName
+        Trace.traceImportant <| sprintf "Could not copy file: %s" exn.FileName
 
 
 
 !! (slidesDir @@ "*.md")
-    ++ (slidesDir @@ "*.fsx")
+++ (slidesDir @@ "*.fsx")
 |> Seq.map fileInfo
 |> Seq.iter generateFor

@@ -32,15 +32,15 @@ let md = """
 ### Slide 3"""
 
 [<Test>]
-let ``can generate sections from markdown``() = 
+let ``can generate sections from markdown``() =
     let slides = (md |> FsReveal.GetPresentationFromMarkdown).Slides
     slides.Length |> shouldEqual 3
-    let slide = 
+    let slide =
         slides
         |> Seq.skip 1
         |> Seq.head
     match slide with
-    | Slide.Nested x -> ()
+    | Slide.Nested _ -> ()
     | _ -> failwith "subslides not parsed"
 
 let md2 = """
@@ -66,12 +66,12 @@ let md2 = """
 ### Slide 3"""
 
 [<Test>]
-let ``can generate sections from markdown without properties``() = 
+let ``can generate sections from markdown without properties``() =
     let slides = (md2 |> FsReveal.GetPresentationFromMarkdown).Slides
     slides.Length |> shouldEqual 3
     let slide = slides.[1]
     match slide with
-    | Slide.Nested x -> ()
+    | Slide.Nested _ -> ()
     | _ -> failwith "subslides not parsed"
 
 let normalizeLineBreaks (text:string) = text.Replace("\r\n","\n").Replace("\n","\n")
@@ -101,7 +101,7 @@ let expectedOutput = """<section >
 """
 
 [<Test>]
-let ``can generate html sections from markdown``() = 
+let ``can generate html sections from markdown``() =
     let presentation = FsReveal.GetPresentationFromMarkdown md
     Formatting.GenerateHTML testTemplate presentation
     |> normalizeLineBreaks
