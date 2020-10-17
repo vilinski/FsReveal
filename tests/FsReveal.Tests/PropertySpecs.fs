@@ -32,7 +32,7 @@ let md = """
 ### Section 3"""
 
 [<Test>]
-let ``can read properties from markdown``() = 
+let ``can read properties from markdown``() =
     let properties = (md |> FsReveal.GetPresentationFromMarkdown).Properties
     properties.["title"] |> shouldEqual "FsReveal"
     properties.["description"] |> shouldEqual "Introduction to FsReveal"
@@ -61,7 +61,7 @@ let defaultMD = """
 ### Section 3"""
 
 [<Test>]
-let ``uses default properties if nothing is specified in markdown``() = 
+let ``uses default properties if nothing is specified in markdown``() =
     let properties = (defaultMD |> FsReveal.GetPresentationFromMarkdown).Properties
     properties.["title"] |> shouldEqual "Presentation"
     properties.["description"] |> shouldEqual ""

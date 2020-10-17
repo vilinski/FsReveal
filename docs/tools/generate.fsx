@@ -22,14 +22,21 @@ let info =
 // For typical project, no changes are needed below
 // --------------------------------------------------------------------------------------
 
-#load "../../packages/FSharp.Formatting/FSharp.Formatting.fsx"
-#r "../../packages/build/FAKE/tools/NuGet.Core.dll"
-#r "../../packages/build/FAKE/tools/FakeLib.dll"
-open Fake
+// #load "../../packages/FSharp.Formatting/FSharp.Formatting.fsx"
+// #r "../../packages/build/FAKE/tools/NuGet.Core.dll"
+// #r "../../packages/build/FAKE/tools/FakeLib.dll"
+#r "nuget: Fake.Core.Trace"
+#r "nuget: Fake.IO.FileSystem"
+#r "nuget: FSharp.Formatting"
+#r "nuget: FSharp.Formatting.Literate"
+open Fake.Core
+open Fake.IO
+open Fake.IO.FileSystemOperators
 open System.IO
-open Fake.FileHelper
-open FSharp.Literate
-open FSharp.MetadataFormat
+// open Fake.FileHelper
+open FSharp.Formatting
+open FSharp.Formatting.Literate
+// open FSharp.Formatting.MetadataFormat
 
 // When called from 'build.fsx', use the public project URL as <root>
 // otherwise, use the current 'output' directory.
@@ -55,10 +62,10 @@ let layoutRoots =
 
 // Copy static files and CSS + JS from F# Formatting
 let copyFiles () =
-  CopyRecursive files output true |> Log "Copying file: "
-  ensureDirectory (output @@ "content")
-  CopyRecursive (formatting @@ "styles") (output @@ "content") true 
-    |> Log "Copying styles and scripts: "
+  Shell.copyRecursive files output true |> Trace.logfn "Copying file: %A"
+  Directory.ensure (output @@ "content")
+  Shell.copyRecursive (formatting @@ "styles") (output @@ "content") true
+  //|> Trace.traceLog "Copying styles and scripts: "
 
 // When called from 'build.fsx', use the public project URL as <root>
 // otherwise, use the current 'output' directory.
@@ -70,10 +77,10 @@ let refRoot = "file://" + (__SOURCE_DIRECTORY__ @@ "../output")
 
 // Build API reference from XML comments
 let buildReference () =
-  CleanDir (output @@ "reference")
+  Shell.cleanDir (output @@ "reference")
   for lib in referenceBinaries do
     MetadataFormat.Generate
-      ( bin @@ lib, output @@ "reference", layoutRoots, 
+      ( bin @@ lib, output @@ "reference", layoutRoots,
         parameters = ("root", refRoot)::info,
         sourceRepo = githubLink @@ "tree/master",
         sourceFolder = __SOURCE_DIRECTORY__ @@ ".." @@ "..",

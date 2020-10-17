@@ -1,3 +1,6 @@
+### 2.0.0 - 17.10.2020
+* Port to netcoreapp3.1
+
 ### 1.3.1 - 17.06.2016
 * BUGFIX: Position tooltips properly on all screens
 
@@ -50,7 +53,7 @@
 * Fix issues with processing (and evaluating) fsx scripts
 * Use reveal.js 3.0.0 - https://github.com/hakimel/reveal.js/releases/tag/3.0.0
 * BUGFIX: Don't delete index.html
- 
+
 ### 0.2.2 - 12.01.2015
 * Use FSharp.Formatting 2.6
 
@@ -72,4 +75,4 @@
 * Create output folder if it does not exist.
 * Check if the input file exists to avoid throwing Exception.
 * Using FSharp.Formatting and FSharp.Compiler.Service
-* Initial release 
+* Initial release

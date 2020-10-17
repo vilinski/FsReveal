@@ -189,3 +189,9 @@ src/reveal.js
 docs/tools/FSharp.Formatting.svclog
 FSharp.Formatting.svclog
 _NCrunch*
+
+# F# Ionide
+.ionide/
+
+# JetBrains IDE
+.idea/
