@@ -98,7 +98,9 @@ type FsReveal private() =
     /// during the valuation.
     ///
     /// ## Parameters
-    /// - `fsiEvaluator` - Custom evaluator (you can use this parameter to add custom formatting
+    /// - `fileName` - The name of the markdown or F# script file to generate from
+    /// - `outFile` - Optional output file name. By default the input file extension is replaced with `html`
+    /// - `fsiEvaluator` - Optional custom evaluator (you can use this parameter to add custom formatting
     ///   that turns values into HTML when embedding them into the presentation)
     static member GenerateFromFile(fileName, outDir, ?outFile, ?fsiEvaluator) =
         let file = FileInfo fileName

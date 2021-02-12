@@ -29,7 +29,7 @@ let rec copyFiles filter source target =
 /// separator 'HorizontalRule(v, _)'
 let splitByHorizontalRule (v: char) list =
     let yieldRevNonEmpty list =
-        if list = [] then []
+        if List.isEmpty list then []
         else [ List.rev list ]
 
     let rec loop groupSoFar list =
