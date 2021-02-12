@@ -35,6 +35,7 @@ open Fake.IO.FileSystemOperators
 open System.IO
 // open Fake.FileHelper
 open FSharp.Formatting
+open FSharp.Formatting.ApiDocs
 open FSharp.Formatting.Literate
 // open FSharp.Formatting.MetadataFormat
 
@@ -79,9 +80,9 @@ let refRoot = "file://" + (__SOURCE_DIRECTORY__ @@ "../output")
 let buildReference () =
   Shell.cleanDir (output @@ "reference")
   for lib in referenceBinaries do
-    MetadataFormat.Generate
+    ApiDocs.GenerateHtml
       ( bin @@ lib, output @@ "reference", layoutRoots,
-        parameters = ("root", refRoot)::info,
+        properties = ("root", refRoot)::info,
         sourceRepo = githubLink @@ "tree/master",
         sourceFolder = __SOURCE_DIRECTORY__ @@ ".." @@ "..",
         libDirs = [ bin ] )

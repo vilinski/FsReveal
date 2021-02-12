@@ -1,10 +1,14 @@
-#r "nuget: FsReveal"
-#r "nuget: FSharp.Formatting.Literate.dll"
+#r "nuget: FSharp.Formatting"
+#r "nuget: FSharp.Formatting.Literate"
 #r "nuget: Fake.IO.FileSystem"
 #r "nuget: Fake.Core.Trace"
+#r "../../src/FsReveal/bin/Debug/netcoreapp3.1/FsReveal.dll"
+// #r "nuget: FsReveal"
 
 open Fake.Core
+open Fake.IO
 open Fake.IO.FileSystemOperators
+open Fake.IO.Globbing.Operators
 open System.IO
 
 open FsReveal
@@ -12,12 +16,13 @@ open FsReveal
 let root = Path.Combine(__SOURCE_DIRECTORY__,"../../")
 let slidesDir = root @@ "/docs/slides"
 let outDir = root @@ "/docs/output/samples/"
-FsReveal.FsRevealHelper.RevealJsFolder <- Path.Combine(root,"paket-files/fsprojects/reveal.js")
-FsReveal.FsRevealHelper.TemplateFile <- Path.Combine(root,"src/FsReveal/template.html")
+FsRevealHelper.RevealJsFolder <- Path.Combine(root,"paket-files/fsprojects/reveal.js")
+FsRevealHelper.TemplateFile <- Path.Combine(root,"src/FsReveal/template.html")
 
-let targetFCIS = Path.Combine(root,@"packages/build/FAKE/tools/FSharp.Compiler.Interactive.Settings.dll")
-if not (System.IO.File.Exists(targetFCIS)) then
-    System.IO.File.Copy(Path.Combine(root,@"bin/FSharp.Compiler.Interactive.Settings.dll"), targetFCIS)
+// let targetFCIS = Path.Combine(root,@"packages/build/FAKE/tools/FSharp.Compiler.Interactive.Settings.dll")
+// let targetFCIS = Path.Combine(root,@".nuget/packages/fsharp.formatting/9.0.1/lib/netstandard2.1//FSharp.Compiler.Interactive.Settings.dll")
+// if not (File.Exists(targetFCIS)) then
+//     File.Copy(Path.Combine(root,@"lib/FSharp.Compiler.Interactive.Settings.dll"), targetFCIS)
 
 
 let copyStylesheet() =
@@ -29,7 +34,7 @@ let copyStylesheet() =
 let copyPics() =
     try
       !! (slidesDir @@ "images/*.*")
-      |> CopyFiles (outDir @@ "images")
+      |> Shell.copyFiles (outDir @@ "images")
     with
     | exn -> Trace.traceImportant <| sprintf "Could not copy picture: %s" exn.Message
 
@@ -56,5 +61,5 @@ let generateFor (file:FileInfo) =
 
 !! (slidesDir @@ "*.md")
 ++ (slidesDir @@ "*.fsx")
-|> Seq.map fileInfo
+|> Seq.map FileInfo
 |> Seq.iter generateFor

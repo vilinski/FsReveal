@@ -72,7 +72,7 @@ let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let outDir = "./docs/output"
 
-let genFSAssemblyInfo (projectPath) =
+let genFSAssemblyInfo (projectPath: string) =
     let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
     let basePath = "src/" + projectName
     let fileName = basePath + "/AssemblyInfo.fs"
@@ -83,7 +83,7 @@ let genFSAssemblyInfo (projectPath) =
         AssemblyInfo.Version release.AssemblyVersion
         AssemblyInfo.FileVersion release.AssemblyVersion ]
 
-let genCSAssemblyInfo (projectPath) =
+let genCSAssemblyInfo (projectPath: string) =
     let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
     let basePath = "src/" + projectName + "/Properties"
     let fileName = basePath + "/AssemblyInfo.cs"
@@ -246,7 +246,7 @@ Target.create "ReleaseDocs" (fun _ ->
     Git.Branches.push tempDocsDir
 )
 
-#load "paket-files/build/fsharp/FAKE/modules/Octokit/Octokit.fsx"
+//#load "paket-files/build/fsharp/FAKE/modules/Octokit/Octokit.fsx"
 open Octokit
 
 Target.create "Release" (fun a ->
